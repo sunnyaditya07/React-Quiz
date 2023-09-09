@@ -11,22 +11,21 @@ import FinishScreen from "./components/FinishScreen";
 import Footer from "./components/Footer";
 import Timer from "./components/Timer";
 
+const SEC_PER_QUES = 30;
 const initialState = {
   questions: questionsData,
   status: "loading",
   index: 0,
   answer: null,
   points: 0,
-  secondsRemaining: null,
+  secondsRemaining: questionsData.length * SEC_PER_QUES,
 };
-const SEC_PER_QUES = 30;
 function reducer(state, action) {
   switch (action.type) {
     case "start":
       return {
         ...state,
         status: "active",
-        secondsRemaining: state.questions.length * SEC_PER_QUES,
       };
     case "newAnswer":
       const currentQuestion = state.questions.at(state.index);
@@ -43,7 +42,11 @@ function reducer(state, action) {
     case "result":
       return { ...state, status: "finished" };
     case "restart":
-      return { ...initialState, questions: state.questions, status: "active" };
+      return {
+        ...initialState,
+        questions: state.questions,
+        status: "active",
+      };
     case "tick":
       return {
         ...state,
